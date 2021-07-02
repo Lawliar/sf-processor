@@ -68,6 +68,7 @@ func (p *PluginCache) init() {
 	(&exporter.Exporter{}).Register(p)
 	(&sysflow.FileDriver{}).Register(p)
 	(&sysflow.StreamingDriver{}).Register(p)
+	(&sysflow.TcpDriver{}).Register(p)
 }
 
 // TryToLoadPlugin loads dynamic plugins to plugin cache from dir path.
