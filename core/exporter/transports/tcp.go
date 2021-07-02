@@ -36,7 +36,7 @@ func (s *TcpProto) Init() (err error) {
 	sock := s.config.TCPHost + strconv.Itoa(s.config.TCPPort)
 	s.conn, err = net.Dial("tcp", sock)
 	if err != nil {
-		logger.Error.Println("Fail to dail to %s", sock)
+		logger.Error.Println("Fail to dail to ", sock)
 		return err
 	}
 	return
