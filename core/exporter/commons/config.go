@@ -56,6 +56,7 @@ type Config struct {
 	SyslogConfig
 	ESConfig
 	FindingsConfig
+	TCPConfig
 }
 
 // CreateConfig creates a new config object from config dictionary.
@@ -119,6 +120,10 @@ func CreateConfig(conf map[string]interface{}) (c Config, err error) {
 	if err != nil {
 		return
 	}
+	c.TCPConfig, err = CreateTcpConfig(c, conf)
+	if err != nil {
+		return
+	}
 	c.FindingsConfig, err = CreateFindingsConfig(c, conf)
 
 	return
@@ -135,10 +140,11 @@ const (
 	ESTransport
 	FindingsTransport
 	NullTransport
+	TCPTransport
 )
 
 func (s Transport) String() string {
-	return [...]string{"terminal", "file", "syslog", "es", "findings", "null"}[s]
+	return [...]string{"terminal", "file", "syslog", "es", "findings", "null", "tcp"}[s]
 }
 
 func parseTransportConfig(s string) Transport {
@@ -156,6 +162,9 @@ func parseTransportConfig(s string) Transport {
 	}
 	if NullTransport.String() == s {
 		return NullTransport
+	}
+	if TCPTransport.String() == s {
+		return TCPTransport
 	}
 	return StdOutTransport
 }
@@ -186,7 +195,7 @@ func parseFormatConfig(s string) Format {
 	return JSONFormat
 }
 
-// Proto denotes protocol type.
+// Proto denotes protocol type that is used by syslog.
 type Proto int
 
 // Proto config options.
