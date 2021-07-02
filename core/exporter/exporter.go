@@ -78,6 +78,7 @@ func (s *Exporter) registerExportProtocols() {
 	(&transports.NullProto{}).Register(protocols)
 	(&transports.FindingsApiProto{}).Register(protocols)
 	(&transports.ElasticProto{}).Register(protocols)
+	(&transports.TcpProto{}).Register(protocols)
 }
 
 // Init initializes the plugin with a configuration map and cache.
