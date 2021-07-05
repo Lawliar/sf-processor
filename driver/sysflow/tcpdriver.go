@@ -98,12 +98,12 @@ func (s *TcpDriver) Run(path string, running *bool) error {
 		}
 		for *running {
 			sFlow = sfgo.NewSysFlow()
-			netData, err := bufio.NewReader(s.conn).ReadString('\n')
+			_, err = bufio.NewReader(s.conn).Read(buf[:])
 			if err != nil {
 				logger.Error.Println("TCP read error: ", err)
 				return err
 			}
-			reader.Reset([]byte(netData))
+			reader.Reset(buf)
 			err = vm.Eval(reader, deser, sFlow)
 			if err != nil {
 				logger.Error.Println("Deserialization error: ", err)

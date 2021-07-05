@@ -14,7 +14,7 @@ package transports
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"net"
 	"strconv"
 
@@ -33,7 +33,7 @@ func NewTcpProto(conf commons.Config) TransportProtocol {
 
 // connect to a remote port
 func (s *TcpProto) Init() (err error) {
-	sock := s.config.TCPHost +":"+ strconv.Itoa(s.config.TCPPort)
+	sock := s.config.TCPHost + strconv.Itoa(s.config.TCPPort)
 	s.conn, err = net.Dial("tcp", sock)
 	if err != nil {
 		logger.Error.Println("Fail to dail to ", sock)
@@ -46,20 +46,15 @@ func (s *TcpProto) Init() (err error) {
 func (s *TcpProto) Export(data []commons.EncodedData) (err error) {
 	for _, d := range data {
 		if buf, ok := d.([]byte); ok {
-			buf = append(buf, "\n"...)
 			if _, err = s.conn.Write(buf); err != nil {
 				return err
 			}
 		} else if buf, err := json.Marshal(d); err == nil {
-			buf = append(buf, "\n"...)
 			if _, err = s.conn.Write(buf); err != nil {
 				return err
 			}
 		} else {
-			buf := []byte(fmt.Sprintf("%v\n", d))
-			if _, err = s.conn.Write(buf); err != nil {
-				return err
-			}
+			return errors.New("Expected byte array or serializable object as export data")
 		}
 	}
 	return
