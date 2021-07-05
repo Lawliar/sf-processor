@@ -33,7 +33,7 @@ func NewTcpProto(conf commons.Config) TransportProtocol {
 
 // connect to a remote port
 func (s *TcpProto) Init() (err error) {
-	sock := s.config.TCPHost + strconv.Itoa(s.config.TCPPort)
+	sock := s.config.TCPHost + ":" + strconv.Itoa(s.config.TCPPort)
 	s.conn, err = net.Dial("tcp", sock)
 	if err != nil {
 		logger.Error.Println("Fail to dail to ", sock)
