@@ -23,14 +23,11 @@ package sysflow
 
 import (
 	"bufio"
-	"bytes"
 	"net"
 
-	"github.com/actgardner/gogen-avro/v7/compiler"
-	"github.com/actgardner/gogen-avro/v7/vm"
+	"github.com/sysflow-telemetry/sf-apis/go/converter"
 	"github.com/sysflow-telemetry/sf-apis/go/logger"
 	"github.com/sysflow-telemetry/sf-apis/go/plugins"
-	"github.com/sysflow-telemetry/sf-apis/go/sfgo"
 )
 
 const (
@@ -82,22 +79,19 @@ func (s *TcpDriver) Run(path string, running *bool) error {
 	}
 	defer l.Close()
 
-	sFlow := sfgo.NewSysFlow()
-	deser, err := compiler.CompileSchemaBytes([]byte(sFlow.Schema()), []byte(sFlow.Schema()))
+	sfobjcvter := converter.NewSFObjectConverter()
 	if err != nil {
 		logger.Error.Println("Compilation error: ", err)
 		return err
 	}
 	for *running {
 		buf := make([]byte, tcpBuffSize)
-		reader := bytes.NewReader(buf)
 		s.conn, err = l.Accept()
 		if err != nil {
 			logger.Error.Println("Tcp accept error: ", err)
 			break
 		}
 		for *running {
-			sFlow = sfgo.NewSysFlow()
 			_, err = bufio.NewReader(s.conn).Read(buf[:])
 			if err != nil {
 				logger.Error.Println("TCP read error: ", err)
@@ -105,11 +99,11 @@ func (s *TcpDriver) Run(path string, running *bool) error {
 			}
 			reader.Reset(buf)
 			logger.Info.Println("buf:",buf)
-			err = vm.Eval(reader, deser, sFlow)
+			datum, err = sfobjcvter.ConvertToSysFlow(buf)
 			if err != nil {
-				logger.Error.Println("Deserialization error: ", err)
+				logger.Error.Println("datum reading error: ", err)
 			}
-			records <- sFlow
+			records <- sfobjcvter.ConvertToSysFlow(datum)
 		}
 		s.conn.Close()
 	}
