@@ -87,6 +87,7 @@ func (s *StreamingDriver) Run(path string, running *bool) error {
 	}
 	defer l.Close()
 
+	logger.Info.Println("listen to ",path)
 	sFlow := sfgo.NewSysFlow()
 	deser, err := compiler.CompileSchemaBytes([]byte(sFlow.Schema()), []byte(sFlow.Schema()))
 	if err != nil {
@@ -112,6 +113,7 @@ func (s *StreamingDriver) Run(path string, running *bool) error {
 			}
 			if flags == 0 {
 				reader.Reset(buf)
+				logger.Info.Println("buf:",buf)
 				err = vm.Eval(reader, deser, sFlow)
 				if err != nil {
 					logger.Error.Println("Deserialization error: ", err)

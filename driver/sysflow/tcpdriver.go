@@ -38,7 +38,7 @@ const (
 )
 
 const (
-	tcpBuffSize   = 1024
+	tcpBuffSize   = 16384
 	tcpOOBuffSize = 1024
 )
 
@@ -104,6 +104,7 @@ func (s *TcpDriver) Run(path string, running *bool) error {
 				return err
 			}
 			reader.Reset(buf)
+			logger.Info.Println("buf:",buf)
 			err = vm.Eval(reader, deser, sFlow)
 			if err != nil {
 				logger.Error.Println("Deserialization error: ", err)

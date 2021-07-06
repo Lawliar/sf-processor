@@ -153,6 +153,7 @@ func run() int {
 	// retrieve positional args
 	path := flag.Arg(0)
 
+	logger.Info.Println("before init path:",path)
 	// initialize the pipeline
 	err = pl.Init(path)
 	if err != nil {
@@ -160,6 +161,7 @@ func run() int {
 		return 1
 	}
 
+	logger.Info.Println("after init path:",path)
 	// memory profiling
 	if *memprofile != "" {
 		f, err := os.Create(*memprofile)
