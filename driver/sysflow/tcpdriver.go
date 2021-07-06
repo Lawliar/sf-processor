@@ -97,13 +97,7 @@ func (s *TcpDriver) Run(path string, running *bool) error {
 				logger.Error.Println("TCP read error: ", err)
 				return err
 			}
-			reader.Reset(buf)
-			logger.Info.Println("buf:",buf)
-			datum, err = sfobjcvter.ConvertToSysFlow(buf)
-			if err != nil {
-				logger.Error.Println("datum reading error: ", err)
-			}
-			records <- sfobjcvter.ConvertToSysFlow(datum)
+			records <- sfobjcvter.ConvertToSysFlow(buf)
 		}
 		s.conn.Close()
 	}
