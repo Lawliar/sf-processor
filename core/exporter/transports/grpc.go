@@ -17,7 +17,7 @@ import (
 	"strconv"
 	"context"
 
-	pb "github.com/Lawliar/sf-processor/core/exporter/encoders/pb"
+	pb "github.com/Lawliar1/pb"
 	"github.com/sysflow-telemetry/sf-apis/go/logger"
 	"github.com/sysflow-telemetry/sf-processor/core/exporter/commons"
 )
@@ -46,8 +46,7 @@ func (s *GrpcProto) Init() (err error) {
 	}
 	client := pb.NewSysflowGrpcClient(conn)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	ctx := context.Background()
 	s.stream, err := client.Upload(ctx)
 	if err != nil {
 		log.Fatalf("%v.Upload(_) = _, %v", client, err)
