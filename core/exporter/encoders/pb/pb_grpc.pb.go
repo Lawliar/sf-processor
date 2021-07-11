@@ -131,5 +131,5 @@ var SysflowGrpc_ServiceDesc = grpc.ServiceDesc{
 			ClientStreams: true,
 		},
 	},
-	Metadata: "grpc.proto",
+	Metadata: "pb.proto",
 }
