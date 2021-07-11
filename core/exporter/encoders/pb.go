@@ -20,7 +20,7 @@
 package encoders
 
 import (
-	pb "github.com/Lawliar1/pb"
+	pb "github.com/lawliar1/pb"
 	"github.com/sysflow-telemetry/sf-apis/go/sfgo"
 	"github.com/sysflow-telemetry/sf-processor/core/exporter/commons"
 	"github.com/sysflow-telemetry/sf-processor/core/policyengine/engine"

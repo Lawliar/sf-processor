@@ -17,7 +17,7 @@ import (
 	"strconv"
 	"context"
 
-	pb "github.com/Lawliar1/pb"
+	pb "github.com/lawliar1/pb"
 	"github.com/sysflow-telemetry/sf-apis/go/logger"
 	"github.com/sysflow-telemetry/sf-processor/core/exporter/commons"
 )
