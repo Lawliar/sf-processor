@@ -1,0 +1,23 @@
+syntax = "proto3";
+ 
+option go_package = "github.com/Lawliar/sf-processor/core/exporter/encoders/grpc";
+
+package grpc;
+
+service SysflowGrpc {
+    rpc upload(stream SysflowEntry) returns (Response) {}
+}
+
+message SysflowEntry{
+    repeated uint32 Sources = 1;
+    repeated int64 Ints = 2;
+    repeated string Strs = 3;
+}
+
+message Response{
+    enum ResponseCode{
+        OK = 0;
+        Error = 1;
+    }
+    ResponseCode resp = 1;
+}
