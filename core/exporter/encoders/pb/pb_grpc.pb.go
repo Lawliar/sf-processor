@@ -30,7 +30,7 @@ func NewSysflowGrpcClient(cc grpc.ClientConnInterface) SysflowGrpcClient {
 }
 
 func (c *sysflowGrpcClient) Upload(ctx context.Context, opts ...grpc.CallOption) (SysflowGrpc_UploadClient, error) {
-	stream, err := c.cc.NewStream(ctx, &SysflowGrpc_ServiceDesc.Streams[0], "/grpc.SysflowGrpc/upload", opts...)
+	stream, err := c.cc.NewStream(ctx, &SysflowGrpc_ServiceDesc.Streams[0], "/grpc.SysflowGrpc/Upload", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +126,7 @@ var SysflowGrpc_ServiceDesc = grpc.ServiceDesc{
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "upload",
+			StreamName:    "Upload",
 			Handler:       _SysflowGrpc_Upload_Handler,
 			ClientStreams: true,
 		},

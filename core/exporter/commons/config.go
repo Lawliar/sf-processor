@@ -56,7 +56,7 @@ type Config struct {
 	SyslogConfig
 	ESConfig
 	FindingsConfig
-	TCPConfig
+	GRPCConfig
 }
 
 // CreateConfig creates a new config object from config dictionary.
@@ -120,7 +120,7 @@ func CreateConfig(conf map[string]interface{}) (c Config, err error) {
 	if err != nil {
 		return
 	}
-	c.TCPConfig, err = CreateTcpConfig(c, conf)
+	c.GRPCConfig, err = CreateGrpcConfig(c, conf)
 	if err != nil {
 		return
 	}
@@ -140,11 +140,11 @@ const (
 	ESTransport
 	FindingsTransport
 	NullTransport
-	TCPTransport
+	GRPCTransport
 )
 
 func (s Transport) String() string {
-	return [...]string{"terminal", "file", "syslog", "es", "findings", "null", "tcp"}[s]
+	return [...]string{"terminal", "file", "syslog", "es", "findings", "null", "grpc"}[s]
 }
 
 func parseTransportConfig(s string) Transport {
@@ -163,8 +163,8 @@ func parseTransportConfig(s string) Transport {
 	if NullTransport.String() == s {
 		return NullTransport
 	}
-	if TCPTransport.String() == s {
-		return TCPTransport
+	if GRPCTransport.String() == s {
+		return GRPCTransport
 	}
 	return StdOutTransport
 }
@@ -177,10 +177,11 @@ const (
 	JSONFormat       Format = iota // JSON schema
 	ECSFormat                      // Elastic Common Schema
 	OccurrenceFormat               // IBM Findings Occurrence
+	PBFormat                       // protobuf
 )
 
 func (s Format) String() string {
-	return [...]string{"json", "ecs", "occurrence"}[s]
+	return [...]string{"json", "ecs", "occurrence", "pb"}[s]
 }
 
 func parseFormatConfig(s string) Format {
@@ -191,6 +192,8 @@ func parseFormatConfig(s string) Format {
 		return ECSFormat
 	case OccurrenceFormat.String():
 		return OccurrenceFormat
+	case PBFormat.String():
+		return PBFormat
 	}
 	return JSONFormat
 }

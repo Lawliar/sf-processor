@@ -5,7 +5,7 @@ option go_package = "github.com/Lawliar/sf-processor/core/exporter/encoders/grpc
 package grpc;
 
 service SysflowGrpc {
-    rpc upload(stream SysflowEntry) returns (Response) {}
+    rpc Upload(stream SysflowEntry) returns (Response) {}
 }
 
 message SysflowEntry{
