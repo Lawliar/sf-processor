@@ -9,9 +9,8 @@ service SysflowGrpc {
 }
 
 message SysflowEntry{
-    repeated uint32 Sources = 1;
-    repeated int64 Ints = 2;
-    repeated string Strs = 3;
+    repeated int64 Ints = 1;
+    repeated string Strs = 2;
 }
 
 message Response{
