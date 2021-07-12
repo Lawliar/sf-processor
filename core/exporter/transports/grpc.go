@@ -14,10 +14,9 @@ package transports
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
 	"log"
 	"strconv"
+	"reflect"
 
 	"google.golang.org/grpc"
 
@@ -62,18 +61,12 @@ func (s *GrpcProto) Init() (err error) {
 // write the buffer to the remote port
 func (s *GrpcProto) Export(data []commons.EncodedData) (err error) {
 	for _, d := range data {
-		if entries, ok := d.([]*pb.SysflowEntry); ok {
-			for _, entry := range entries {
-				if err := s.stream.Send(entry); err != nil {
-					log.Fatalf("%v.Send(%v) = %v", s.stream, entry, err)
-				}
+		if entry,ok := d.(*pb.SysflowEntry); ok{
+			if err := s.stream.Send(entry); err != nil {
+				logger.Error.Println("%v.Send(%v) = %v", s.stream, d, err)
 			}
-		} else if _, err := json.Marshal(d); err == nil {
-			return errors.New("grpc does not support json")
-		} else if _, ok := d.([]byte); ok {
-			return errors.New("grpc does not support byte array")
-		} else {
-			return errors.New("Expected byte array or serializable object as export data")
+		}else{
+			logger.Error.Println("wrong type,",reflect.TypeOf(d).String())
 		}
 	}
 	return

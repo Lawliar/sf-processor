@@ -113,7 +113,6 @@ func (s *StreamingDriver) Run(path string, running *bool) error {
 			}
 			if flags == 0 {
 				reader.Reset(buf)
-				logger.Info.Println("buf:",buf)
 				err = vm.Eval(reader, deser, sFlow)
 				if err != nil {
 					logger.Error.Println("Deserialization error: ", err)
