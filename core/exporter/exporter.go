@@ -68,6 +68,7 @@ func (s *Exporter) registerCodecs() {
 	(&encoders.JSONEncoder{}).Register(codecs)
 	(&encoders.ECSEncoder{}).Register(codecs)
 	(&encoders.OccurrenceEncoder{}).Register(codecs)
+	(&encoders.PBEncoder{}).Register(codecs)
 }
 
 // registerExportProtocols register transport protocols for exporting processor data.
