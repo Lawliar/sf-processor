@@ -25,6 +25,7 @@ require (
 	github.com/actgardner/gogen-avro/v7 v7.3.1
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
+	github.com/lawliar1/pb v0.0.0-20210711232623-baa81c04b687 // indirect
 	github.com/linkedin/goavro v2.1.0+incompatible
 	github.com/mitchellh/mapstructure v1.2.2 // indirect
 	github.com/pelletier/go-toml v1.7.0 // indirect
