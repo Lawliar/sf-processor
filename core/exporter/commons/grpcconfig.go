@@ -27,25 +27,25 @@ import (
 
 // Configuration keys.
 const (
-	TCPHostIpConfigKey string = "grpc.ip"
-	TCPPortConfigKey   string = "grpc.port"
+	GRPCHostIpConfigKey string = "grpc.ip"
+	GRPCPortConfigKey   string = "grpc.port"
 )
 
 // ESConfig holds Elastic specific configuration.
 type GRPCConfig struct {
-	TCPHost string
-	TCPPort int
+	GRPCHost string
+	GRPCPort int
 }
 
-func CreateTcpConfig(bc Config, conf map[string]interface{}) (c GRPCConfig, err error) {
+func CreateGrpcConfig(bc Config, conf map[string]interface{}) (c GRPCConfig, err error) {
 	c = GRPCConfig{}
 
 	// parse config map
-	if v, ok := conf[TCPHostIpConfigKey].(string); ok {
-		c.TCPHost = v
+	if v, ok := conf[GRPCHostIpConfigKey].(string); ok {
+		c.GRPCHost = v
 	}
-	if v, ok := conf[TCPPortConfigKey].(string); ok {
-		c.TCPPort, err = strconv.Atoi(v)
+	if v, ok := conf[GRPCPortConfigKey].(string); ok {
+		c.GRPCPort, err = strconv.Atoi(v)
 		if err != nil {
 			return c, err
 		}
