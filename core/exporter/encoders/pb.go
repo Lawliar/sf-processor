@@ -56,16 +56,17 @@ func (t *PBEncoder) Encode(recs []*engine.Record) ([]commons.EncodedData, error)
 // Encodes a telemetry record into an ECS representation.
 func (t *PBEncoder) encode(rec *engine.Record) *pb.SysflowEntry {
 	pb := &pb.SysflowEntry{}
-	for i := 0; i <= sfgo.INT_ARRAY_SIZE; i++ {
-		opFlag := rec.GetInt(i, sfgo.SYSFLOW_SRC)
+
+	for i := uint32(0); i <= uint32(sfgo.INT_ARRAY_SIZE); i++ {
+		opFlag := rec.GetInt(sfgo.Attribute(i), sfgo.SYSFLOW_SRC)
 		pb.Ints = append(pb.Ints, opFlag)
 	}
-	for i := 0; i <= sfgo.STR_ARRAY_SIZE; i++ {
-		str := rec.GetStr(i, sfgo.SYSFLOW_SRC)
+	for i := uint32(0); i <= uint32(sfgo.STR_ARRAY_SIZE); i++ {
+		str := rec.GetStr(sfgo.Attribute(i), sfgo.SYSFLOW_SRC)
 		pb.Strs = append(pb.Strs, str)
 	}
 	return pb
 }
 
 // Cleanup cleans up resources.
-func (t *ECSEncoder) Cleanup() {}
+func (t *PBEncoder) Cleanup() {}

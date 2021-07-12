@@ -13,9 +13,13 @@
 package transports
 
 import (
-	"google.golang.org/grpc"
-	"strconv"
 	"context"
+	"encoding/json"
+	"errors"
+	"log"
+	"strconv"
+
+	"google.golang.org/grpc"
 
 	pb "github.com/lawliar1/pb"
 	"github.com/sysflow-telemetry/sf-apis/go/logger"
@@ -24,7 +28,7 @@ import (
 
 type GrpcProto struct {
 	config commons.Config
-	conn   grpc.ClientConn
+	conn   *grpc.ClientConn
 	stream pb.SysflowGrpc_UploadClient
 }
 
@@ -34,20 +38,20 @@ func NewGrpcProto(conf commons.Config) TransportProtocol {
 
 // connect to a remote port
 func (s *GrpcProto) Init() (err error) {
-	sock := s.config.GrpcHost + ":" + strconv.Itoa(s.config.GrpcPort)
-	
+	sock := s.config.GRPCHost + ":" + strconv.Itoa(s.config.GRPCPort)
+
 	var opts []grpc.DialOption
-	
+
 	opts = append(opts, grpc.WithInsecure())
 	opts = append(opts, grpc.WithBlock())
-	s.conn, err := grpc.Dial(sock, opts...)
+	s.conn, err = grpc.Dial(sock, opts...)
 	if err != nil {
 		logger.Error.Fatalf("fail to dial: %v", err)
 	}
-	client := pb.NewSysflowGrpcClient(conn)
+	client := pb.NewSysflowGrpcClient(s.conn)
 
 	ctx := context.Background()
-	s.stream, err := client.Upload(ctx)
+	s.stream, err = client.Upload(ctx)
 	if err != nil {
 		log.Fatalf("%v.Upload(_) = _, %v", client, err)
 	}
@@ -58,20 +62,16 @@ func (s *GrpcProto) Init() (err error) {
 // write the buffer to the remote port
 func (s *GrpcProto) Export(data []commons.EncodedData) (err error) {
 	for _, d := range data {
-		if entries, ok := d.([]pb.SysflowEntry); ok {
-			for _, entry := range entries{
+		if entries, ok := d.([]*pb.SysflowEntry); ok {
+			for _, entry := range entries {
 				if err := s.stream.Send(entry); err != nil {
 					log.Fatalf("%v.Send(%v) = %v", s.stream, entry, err)
 				}
 			}
-		} else if buf, err := json.Marshal(d); err == nil {
-			if _, err = s.conn.Write(buf); err != nil {
-				return err
-			}
-		} else if buf, ok := d.([]byte); ok {
-			if _, err = s.conn.Write(buf); err != nil {
-				return err
-			}
+		} else if _, err := json.Marshal(d); err == nil {
+			return errors.New("grpc does not support json")
+		} else if _, ok := d.([]byte); ok {
+			return errors.New("grpc does not support byte array")
 		} else {
 			return errors.New("Expected byte array or serializable object as export data")
 		}
@@ -79,7 +79,6 @@ func (s *GrpcProto) Export(data []commons.EncodedData) (err error) {
 	return
 }
 
-// Register the tcp proto object with the exporter
 func (s *GrpcProto) Register(eps map[commons.Transport]TransportProtocolFactory) {
 	eps[commons.GRPCTransport] = NewGrpcProto
 }
