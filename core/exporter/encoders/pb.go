@@ -57,11 +57,11 @@ func (t *PBEncoder) Encode(recs []*engine.Record) ([]commons.EncodedData, error)
 func (t *PBEncoder) encode(rec *engine.Record) *pb.SysflowEntry {
 	pb := &pb.SysflowEntry{}
 
-	for i := uint32(0); i <= uint32(sfgo.INT_ARRAY_SIZE); i++ {
+	for i := uint32(0); i < uint32(sfgo.INT_ARRAY_SIZE); i++ {
 		opFlag := rec.GetInt(sfgo.Attribute(i), sfgo.SYSFLOW_SRC)
 		pb.Ints = append(pb.Ints, opFlag)
 	}
-	for i := uint32(0); i <= uint32(sfgo.STR_ARRAY_SIZE); i++ {
+	for i := uint32(0); i < uint32(sfgo.STR_ARRAY_SIZE); i++ {
 		str := rec.GetStr(sfgo.Attribute(i), sfgo.SYSFLOW_SRC)
 		pb.Strs = append(pb.Strs, str)
 	}
