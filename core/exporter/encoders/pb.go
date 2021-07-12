@@ -20,6 +20,7 @@
 package encoders
 
 import (
+	"fmt"
 	pb "github.com/lawliar1/pb"
 	"github.com/sysflow-telemetry/sf-apis/go/sfgo"
 	"github.com/sysflow-telemetry/sf-processor/core/exporter/commons"
@@ -56,7 +57,6 @@ func (t *PBEncoder) Encode(recs []*engine.Record) ([]commons.EncodedData, error)
 // Encodes a telemetry record into an ECS representation.
 func (t *PBEncoder) encode(rec *engine.Record) *pb.SysflowEntry {
 	pb := &pb.SysflowEntry{}
-
 	for i := uint32(0); i < uint32(sfgo.INT_ARRAY_SIZE); i++ {
 		opFlag := rec.GetInt(sfgo.Attribute(i), sfgo.SYSFLOW_SRC)
 		pb.Ints = append(pb.Ints, opFlag)
