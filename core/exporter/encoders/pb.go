@@ -20,7 +20,6 @@
 package encoders
 
 import (
-	"fmt"
 	pb "github.com/lawliar1/pb"
 	"github.com/sysflow-telemetry/sf-apis/go/sfgo"
 	"github.com/sysflow-telemetry/sf-processor/core/exporter/commons"
