@@ -34,20 +34,21 @@ import (
 )
 
 const (
-	tcpDriverName = "tcp"
+	grpcDriverName = "grpc"
 )
 
-const (
-	tcpBuffSize   = 16384
-	tcpOOBuffSize = 1024
-)
 
 // TcpDriver represents a tcp sysflow datasource
-type TcpDriver struct {
+type GrpcDriver struct {
+	pb.UnimplementedSysflowGrpcServer
 	pipeline plugins.SFPipeline
-	conn     net.Conn
 }
 
+func (s* GrpcDriver) RecordRoute(stream pb.RouteGuide_RecordRouteServer) error {
+	for {
+		sfData, err := stream.Recv()
+	}
+}
 // create a new tcp driver
 func NewTcpDriver() plugins.SFDriver {
 	return &TcpDriver{}

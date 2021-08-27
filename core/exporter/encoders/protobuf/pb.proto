@@ -1,0 +1,22 @@
+syntax = "proto3";
+ 
+option go_package = "github.com/sysflow-telemetry/sf-processor/core/exporter/encoders/grpc";
+
+package grpc;
+
+service SysflowGrpc {
+    rpc Upload(stream SysflowEntry) returns (Response) {}
+}
+
+message SysflowEntry{
+    repeated int64 Ints = 1;
+    repeated string Strs = 2;
+}
+
+message Response{
+    enum ResponseCode{
+        OK = 0;
+        Error = 1;
+    }
+    ResponseCode resp = 1;
+}
